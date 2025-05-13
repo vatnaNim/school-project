@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catch the Falling Items Game</title>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background-color: #282c34;
+}
+
+.game-container {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  background-color: #f0f0f0;
+  overflow: hidden;
+  border: 2px solid #333;
+  border-radius: 8px;
+}
+
+#basket {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 30px;
+  background-color: #555;
+  border-radius: 5px;
+}
+
+.falling-item {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #FF6347;
+  border-radius: 50%;
+}
+
+#score, #lives {
+  position: absolute;
+  top: 10px;
+  color: #333;
+  font-size: 18px;
+}
+
+#score {
+  left: 10px;
+}
+
+#lives {
+  right: 10px;
+}
+
+</style>
+</head>
+<body>
+  <div class="game-container">
+    <div id="basket"></div>
+    <div id="score">Score: 0</div>
+    <div id="lives">Lives: 3</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+<script>
+// Game variables
+const gameContainer = document.querySelector('.game-container');
+const basket = document.getElementById('basket');
+const scoreDisplay = document.getElementById('score');
+const livesDisplay = document.getElementById('lives');
+let score = 0;
+let lives = 3;
+let basketPosition = gameContainer.offsetWidth / 2 - basket.offsetWidth / 2;
+let gameInterval;
+
+// Key controls for basket movement
+document.addEventListener('keydown', (event) => {
+  const key = event.key;
+  if (key === 'ArrowLeft' && basketPosition > 0) {
+    basketPosition -= 20;
+  } else if (key === 'ArrowRight' && basketPosition < gameContainer.offsetWidth - basket.offsetWidth) {
+    basketPosition += 20;
+  }
+  basket.style.left = `${basketPosition}px`;
+});
+
+// Function to create a falling item
+function createFallingItem() {
+  const item = document.createElement('div');
+  item.classList.add('falling-item');
+  item.style.left = `${Math.random() * (gameContainer.offsetWidth - 30)}px`;
+  item.style.top = '0px';
+  gameContainer.appendChild(item);
+
+  // Move the item down
+  const fallInterval = setInterval(() => {
+    let itemTop = parseInt(window.getComputedStyle(item).getPropertyValue('top'));
+    item.style.top = `${itemTop + 5}px`;
+
+    // Check if item is caught by the basket
+    if (itemTop + 30 >= gameContainer.offsetHeight - basket.offsetHeight &&
+        item.offsetLeft > basketPosition &&
+        item.offsetLeft < basketPosition + basket.offsetWidth) {
+      score++;
+      scoreDisplay.innerText = `Score: ${score}`;
+      item.remove();
+      clearInterval(fallInterval);
+    }
+
+    // Remove item if it reaches the bottom of the screen
+    if (itemTop > gameContainer.offsetHeight) {
+      item.remove();
+      clearInterval(fallInterval);
+      lives--;
+      livesDisplay.innerText = `Lives: ${lives}`;
+      if (lives === 0) {
+        endGame();
+      }
+    }
+  }, 50);
+}
+
+// Start the game by creating items at intervals
+function startGame() {
+  gameInterval = setInterval(createFallingItem, 1000);
+}
+
+// End the game
+function endGame() {
+  clearInterval(gameInterval);
+  alert(`Game Over! Your score: ${score}`);
+  resetGame();
+}
+
+// Reset game function
+function resetGame() {
+  score = 0;
+  lives = 3;
+  scoreDisplay.innerText = `Score: ${score}`;
+  livesDisplay.innerText = `Lives: ${lives}`;
+  basketPosition = gameContainer.offsetWidth / 2 - basket.offsetWidth / 2;
+  basket.style.left = `${basketPosition}px`;
+  const items = document.querySelectorAll('.falling-item');
+  items.forEach(item => item.remove());
+  startGame();
+}
+
+// Start the game on page load
+startGame();
+
+
+</script>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Football Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #7ec850; /* Grass color */
+        }
+        canvas {
+            border: 2px solid #fff;
+            background-color: #008000; /* Field color */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script src="script.js"></script>
+</body>
+</html>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// Game objects
+const player = {
+    x: 50,
+    y: canvas.height / 2,
+    width: 20,
+    height: 20,
+    speed: 5,
+};
+
+const ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    radius: 10,
+    speedX: 0,
+    speedY: 0,
+};
+
+// Key state
+const keys = {};
+
+// Event listeners for keydown and keyup
+window.addEventListener("keydown", (e) => {
+    keys[e.key] = true;
+});
+
+window.addEventListener("keyup", (e) => {
+    keys[e.key] = false;
+});
+
+// Update game objects
+function update() {
+    // Move player
+    if (keys["ArrowUp"] && player.y > 0) {
+        player.y -= player.speed;
+    }
+    if (keys["ArrowDown"] && player.y < canvas.height - player.height) {
+        player.y += player.speed;
+    }
+    if (keys["ArrowLeft"] && player.x > 0) {
+        player.x -= player.speed;
+    }
+    if (keys["ArrowRight"] && player.x < canvas.width - player.width) {
+        player.x += player.speed;
+    }
+    
+    // Move ball when kicking
+    if (keys["Space"]) {
+        const angle = Math.atan2(ball.y - player.y, ball.x - player.x);
+        ball.speedX = Math.cos(angle) * 10; // Kick speed
+        ball.speedY = Math.sin(angle) * 10; // Kick speed
+    }
+    
+    // Update ball position
+    ball.x += ball.speedX;
+    ball.y += ball.speedY;
+    
+    // Reset ball speed when it stops
+    if (Math.abs(ball.speedX) < 0.1 && Math.abs(ball.speedY) < 0.1) {
+        ball.speedX = 0;
+        ball.speedY = 0;
+    }
+}
+
+// Draw game objects
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw player
+    ctx.fillStyle = "blue";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+    
+    // Draw ball
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+// Game loop
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+
+// Start the game
+gameLoop();
+
+</script>

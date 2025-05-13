@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enhanced UI</title>
+<style>
+  /* General styling */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    scroll-behavior: smooth;
+  }
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  /* Header styling */
+  header {
+    background-color: #2d2f3f;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+  }
+  nav ul li {
+    margin: 0 15px;
+  }
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  nav ul li a:hover {
+    color: #ff5f5f;
+  }
+  /* Hero section */
+  .hero {
+    background: linear-gradient(135deg, #ff5f5f, #ffca1f);
+    text-align: center;
+    padding: 60px 20px;
+    color: white;
+  }
+  .hero h1 {
+    margin-bottom: 20px;
+    font-size: 3em;
+    font-weight: 700;
+  }
+  .hero button {
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+  }
+  .hero button:hover {
+    background-color: #ff5f5f;
+  }
+  /* Carousel */
+  .carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 40px 0;
+    position: relative;
+  }
+  .carousel img {
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .carousel img.active {
+    opacity: 1;
+  }
+  /* FAQ section */
+  .faq {
+    margin: 40px 0;
+  }
+  .faq h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2em;
+  }
+  .faq-item {
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  .faq-item:hover {
+    background-color: #f9f9f9;
+  }
+  .faq-item h3 {
+    font-size: 1.1em;
+    color: #333;
+  }
+  .faq-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    padding: 0 15px;
+  }
+  .faq-content.show {
+    max-height: 100px;
+  }
+  /* Scroll to Top Button */
+  #scrollTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <h1>Explore Our World</h1>
+  <button onclick="showAlert()">Get Started</button>
+</section>
+
+<div class="carousel container" id="carousel">
+  <button onclick="prevSlide()">⬅️</button>
+  <img src="https://via.placeholder.com/300x200/FF5733" alt="Slide 1" class="active">
+  <img src="https://via.placeholder.com/300x200/33FF57" alt="Slide 2">
+  <img src="https://via.placeholder.com/300x200/3357FF" alt="Slide 3">
+  <button onclick="nextSlide()">➡️</button>
+</div>
+
+<section class="faq container" id="faq">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item" onclick="toggleFAQ(this)">
+    <h3>What services do you offer?</h3>
+    <div class="faq-content">We offer web development, design, and consulting services.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFAQ(this)">
+    <h3>How can I contact you?</h3>
+    <div class="faq-content">You can reach us via the Contact section below.</div>
+  </div>
+</section>
+
+<button id="scrollTopBtn" onclick="scrollToTop()">Top</button>
+
+<script>
+  // Show alert function
+  function showAlert() {
+    alert("Thank you for getting started with us!");
+  }
+
+  // Carousel functionality with fade transition
+  let slideIndex = 0;
+  const slides = document.querySelectorAll('.carousel img');
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.remove('active');
+      if (i === index) {
+        slide.classList.add('active');
+      }
+    });
+  }
+
+  function nextSlide() {
+    slideIndex = (slideIndex + 1) % slides.length;
+    showSlide(slideIndex);
+  }
+
+  function prevSlide() {
+    slideIndex = (slideIndex - 1 + slides.length) % slides.length;
+    showSlide(slideIndex);
+  }
+
+  // FAQ toggle functionality with smooth expand effect
+  function toggleFAQ(faqItem) {
+    const content = faqItem.querySelector('.faq-content');
+    content.classList.toggle('show');
+  }
+
+  // Scroll to top button functionality
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+  window.onscroll = () => {
+    scrollTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
+  };
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>

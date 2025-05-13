@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Welcome Home Page</title>
+<style>
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body, html {
+    overflow-x: hidden;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    perspective: 1000px;
+    background: #1a1a1a;
+    scroll-behavior: smooth;
+  }
+  
+  /* Background Image */
+  .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('https://i.pinimg.com/564x/51/0f/37/510f37fb7fbcfc79014a780f96699f2e.jpg') no-repeat center center/cover;
+    transform: translateZ(-30px) scale(1.2);
+    filter: brightness(0.7);
+    z-index: -1;
+  }
+  
+  /* 3D Welcome Section */
+  .welcome-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    transform: translateZ(20px);
+  }
+  .welcome-section h1 {
+    font-size: 4rem;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInUp 1s forwards 0.5s;
+  }
+  .welcome-section p {
+    font-size: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards 1s;
+  }
+  
+  /* Additional Sections */
+  .section {
+    min-height: 100vh;
+    padding: 50px;
+    text-align: center;
+    color: #fff;
+    background: #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .section h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards;
+  }
+  .section p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards 0.3s;
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="background"></div>
+
+<!-- Welcome Section -->
+<section class="welcome-section">
+  <div class="content">
+    <h1>Welcome</h1>
+    <p>Explore and enjoy the 3D experience</p>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="section" style="background-color: #333;">
+  <h2>About Us</h2>
+  <p>Learn more about our journey and what drives us to deliver excellence in every project.</p>
+</section>
+
+<!-- Gallery Section -->
+<section class="section" style="background-color: #444;">
+  <h2>Gallery</h2>
+  <p>Take a look at some of our favorite moments and creations from past projects.</p>
+</section>
+
+<!-- Contact Section -->
+<section class="section" style="background-color: #555;">
+  <h2>Contact Us</h2>
+  <p>We’d love to hear from you! Reach out with any questions or for more information.</p>
+</section>
+
+<script>
+  // Track mouse movement for 3D parallax effect
+  document.addEventListener('mousemove', (e) => {
+    const { innerWidth: width, innerHeight: height } = window;
+    const xAxis = (width / 2 - e.pageX) / 25;
+    const yAxis = (height / 2 - e.pageY) / 25;
+
+    // Apply transform to welcome section and background
+    document.querySelector('.welcome-section .content').style.transform = `translate(-50%, -50%) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    document.querySelector('.background').style.transform = `translateZ(-30px) scale(1.2) rotateY(${xAxis / 2}deg) rotateX(${yAxis / 2}deg)`;
+  });
+
+  // Add scroll event listener to animate sections on scroll
+  const sections = document.querySelectorAll('.section');
+  const fadeInElements = document.querySelectorAll('.welcome-section h1, .welcome-section p, .section h2, .section p');
+
+  window.addEventListener('scroll', () => {
+    fadeInElements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 100) {
+        el.style.animationPlayState = 'running';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

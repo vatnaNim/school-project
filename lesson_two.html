@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Website</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+  }
+  h1 {
+    cursor: pointer;
+  }
+  #image-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  #slider img {
+    width: 300px;
+    height: 200px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: none;
+  }
+  #toggle-content {
+    width: 80%;
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    text-align: center;
+    display: none;
+    margin: 20px 0;
+  }
+  #scroll-top {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="header-title">Interactive Website</h1>
+</header>
+
+<div id="image-slider">
+  <button onclick="prevImage()">⬅️</button>
+  <div id="slider">
+    <img src="https://via.placeholder.com/300x200/FF5733" alt="Slide 1" style="display: block;">
+    <img src="https://via.placeholder.com/300x200/33FF57" alt="Slide 2">
+    <img src="https://via.placeholder.com/300x200/3357FF" alt="Slide 3">
+  </div>
+  <button onclick="nextImage()">➡️</button>
+</div>
+
+<button onclick="toggleContent()">Show/Hide Content</button>
+<div id="toggle-content">
+  <p>This is some additional content that can be shown or hidden with the button above.</p>
+</div>
+
+<button id="scroll-top" onclick="scrollToTop()">Top</button>
+
+<script>
+  // Header Color Changer
+  const headerTitle = document.getElementById('header-title');
+  const colors = ['red', 'blue', 'green', 'purple', 'orange'];
+  let colorIndex = 0;
+
+  headerTitle.addEventListener('click', () => {
+    headerTitle.style.color = colors[colorIndex];
+    colorIndex = (colorIndex + 1) % colors.length;
+  });
+
+  // Image Slider
+  const images = document.querySelectorAll('#slider img');
+  let currentImageIndex = 0;
+
+  function showImage(index) {
+    images.forEach((img, i) => {
+      img.style.display = i === index ? 'block' : 'none';
+    });
+  }
+
+  function nextImage() {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    showImage(currentImageIndex);
+  }
+
+  function prevImage() {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    showImage(currentImageIndex);
+  }
+
+  // Toggle Content
+  const toggleContentDiv = document.getElementById('toggle-content');
+
+  function toggleContent() {
+    toggleContentDiv.style.display = toggleContentDiv.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Scroll to Top Button
+  const scrollTopButton = document.getElementById('scroll-top');
+
+  window.onscroll = function() {
+    scrollTopButton.style.display = window.scrollY > 200 ? 'block' : 'none';
+  };
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
